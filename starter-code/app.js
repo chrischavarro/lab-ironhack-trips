@@ -6,8 +6,14 @@ const logger         = require("morgan");
 const cookieParser   = require("cookie-parser");
 const bodyParser     = require("body-parser");
 const mongoose       = require("mongoose");
+const passport = require('passport');
+const FbStrategy = require('passport-facebook').Strategy;
+const MongoStore = require('connect-mongo')(session);
 const app            = express();
-
+const User = require('./models/user');
+const authController = require('./routes/authController');
+const index = require('./routes/index');
+const bcrypt = require('bcrypt');
 // Controllers
 
 // Mongoose configuration
@@ -29,12 +35,58 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 // Authentication
 app.use(session({
-  secret: "ironhack trips"
+  secret: "ironhack trips",
+  resave: false,
+  saveUninitialized: true,
+  store: new MongoStore( { mongooseConnection: mongoose.connection})
 }));
+app.use(passport.initialize());
+app.use(passport.session());
+passport.serializeUser((user, cb) => {
+  cb(null, user._id);
+})
+
+passport.deserializeUser((id, cb) => {
+  User.findById(id, (err, user) => {
+    if (err) { return cb(err); }
+    cb(null, user);
+  });
+});
+
 app.use(cookieParser());
 
 // Routes
 // app.use("/", index);
+app.use('/', index)
+app.use('/', authController)
+
+passport.use(new FbStrategy({
+  clientID: '184150962138610',
+  clientSecret: 'f6976f17b753af3d68da4ad4b997e3d0',
+  callbackURL: '/auth/facebook/callback'
+}, (accessToken, refreshToken, profile, done) => {
+  User.findOne({ provider_id: profile.id }, (err, user) => {
+    if (err) {
+      return done(err);
+    }
+    else if (user) {
+      return done(null, user)
+    }
+    else {
+      const newUser = new User({
+        provider_id: profile.id,
+        provider_name: profile.displayName
+      });
+
+      newUser.save((err) => {
+        if (err) {
+          return done(err)
+        }
+        done(null, newUser)
+      });
+    };
+  });
+}));
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
@@ -52,6 +104,10 @@ app.use((err, req, res, next) => {
   // render the error page
   res.status(err.status || 500);
   res.render("error");
+});
+
+app.listen(3000, () => {
+  console.log('Ironhack trips server listening')
 });
 
 module.exports = app;
