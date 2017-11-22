@@ -12,6 +12,7 @@ const MongoStore = require('connect-mongo')(session);
 const app            = express();
 const User = require('./models/user');
 const authController = require('./routes/authController');
+const tripController = require('./routes/tripController');
 const index = require('./routes/index');
 const bcrypt = require('bcrypt');
 // Controllers
@@ -59,6 +60,7 @@ app.use(cookieParser());
 // app.use("/", index);
 app.use('/', index)
 app.use('/', authController)
+app.use('/my-trips', tripController)
 
 passport.use(new FbStrategy({
   clientID: '184150962138610',

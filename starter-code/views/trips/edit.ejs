@@ -1,0 +1,15 @@
+<h2>Editing Trip</h2>
+
+<form action="/my-trips/edit/<%= trip._id %>" method="post">
+  <div class="form-group">
+    <label for="edit-destination">Destination</label>
+    <input type="text" name="destination" id="edit-destination" value="<%= trip.destination %>">
+  </div>
+
+  <div class="form-group">
+    <label for="edit-description">Description</label>
+    <input type="text" name="description" id="edit-description" value="<%= trip.description %>">
+  </div>
+
+  <button type="submit">Save Changes</button>
+</form>

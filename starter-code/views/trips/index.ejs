@@ -1,0 +1,20 @@
+<h2>Your Trips</h2>
+
+<% trips.forEach((trip) => { %>
+  <div class="">
+    <label for="destination">Destination</label>
+    <%= trip.destination %>
+    <label for="description">Description</label>
+    <%= trip.description %>
+    <a href="/my-trips/edit/<%= trip._id %>">Edit Trip</a> <br>
+    <img src="<%= trip.pic_path %>" width="150px;"> <br>
+    <a href="/my-trips/<%= trip._id %>/edit-image">Edit Image</a> <br>
+    <a href="/my-trips/delete/<%= trip._id %>">Delete Trip</a>
+  </div>
+<% }) %>
+
+
+<a href="/my-trips/new">Start a new adventure!</a>
+<% if (typeof(message) !== 'undefined') { %>
+  <%= message %>
+<% } %>

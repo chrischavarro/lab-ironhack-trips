@@ -1,0 +1,8 @@
+<form action="/my-trips/<%= trip._id %>/edit-image" method="post" enctype="multipart/form-data">
+  <div class="form-group">
+    <label for="edit-pic_path">Description</label>
+    <input type="file" name="pic_path" id="edit-pic_path">
+  </div>
+  <button type="submit" name="button">Save Changes</button>
+</form>
+<a href="/my-trips">Go Back</a>
