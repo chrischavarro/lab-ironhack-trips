@@ -13,6 +13,7 @@ const app            = express();
 const User = require('./models/user');
 const authController = require('./routes/authController');
 const tripController = require('./routes/tripController');
+const publicController = require('./routes/publicController');
 const index = require('./routes/index');
 const bcrypt = require('bcrypt');
 // Controllers
@@ -61,6 +62,7 @@ app.use(cookieParser());
 app.use('/', index)
 app.use('/', authController)
 app.use('/my-trips', tripController)
+app.use('/', publicController)
 
 passport.use(new FbStrategy({
   clientID: '184150962138610',

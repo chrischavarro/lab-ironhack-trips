@@ -1,0 +1,9 @@
+<h2>Showing <%= profileName %>'s' Profile</h2>
+
+<% trips.forEach((trip) => { %>
+  <div class="">
+    <%= trip.destination %> <br>
+    <img src="<%= trip.pic_path %>" width="200px"> <br>
+    <a href="/trips/<%= trip._id %>">View This Trip</a>
+  </div>
+<% }) %>
